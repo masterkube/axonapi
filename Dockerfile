@@ -1,0 +1,8 @@
+FROM tomcat
+  
+COPY ./axonapi-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/
+
+RUN ["apt-get", "update"]
+RUN ["apt-get", "-y", "install", "nano"]
+
+CMD ["catalina.sh","run"]
