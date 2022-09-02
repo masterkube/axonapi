@@ -7,5 +7,4 @@ select distinct ProcessName, ActionName from  interactionspaceask where ProcessN
 select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where  ProcessName != SignalProcessName and  ProcessName ="State";
 
 
-
 select ps.ProcessId, GROUP_CONCAT(distinct it.ActionName) as OutBounds, GROUP_CONCAT(distinct ia.ActionName) as InBounds from processstore ps, interactionspacetell it, interactionspaceask ia where it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId
