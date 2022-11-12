@@ -3,23 +3,14 @@ package com.axonapi.Model;
 public class node {
     public String id;
     public String label;
-    public String outbounds;
-    public String inbounds;
+    public String parentNode;
 
-    public String getOutbounds() {
-        return this.outbounds;
+    public String getParentnode() {
+        return this.parentNode;
     }
 
-    public void setOutbounds(String outbounds) {
-        this.outbounds = outbounds;
-    }
-
-    public String getInbounds() {
-        return this.inbounds;
-    }
-
-    public void setInbounds(String inbounds) {
-        this.inbounds = inbounds;
+    public void setParentnode(String parentNode) {
+        this.parentNode = parentNode;
     }
 
     public void setId(String id){

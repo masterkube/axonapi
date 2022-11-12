@@ -36,8 +36,7 @@ public class AxonRepository{
            node n = new node();
            n.setId(rs.getString("ProcessId"));
            n.setLabel(rs.getString("AvatarName"));
-           n.setOutbounds(rs.getString("OutBounds"));
-           n.setInbounds(rs.getString("InBounds"));
+           n.setParentnode(rs.getString("ProcessName"));
            return n;
         }
     }
@@ -61,8 +60,7 @@ public class AxonRepository{
         try{
             //String sql2 = "select ps.ProcessId as 'ProcessId', GROUP_CONCAT(distinct it.ActionName) as 'OutBounds', GROUP_CONCAT(distinct ia.ActionName) as 'InBounds' from processstore ps, interactionspacetell it, interactionspaceask ia where it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId";
             //with avatar name for label
-            String sql2 = "select ps.ProcessId, an.AvatarName, GROUP_CONCAT(distinct it.ActionName) as OutBounds, GROUP_CONCAT(distinct ia.ActionName) as InBounds from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId";
-
+            String sql2 = "select ps.ProcessId, an.AvatarName, ps.ProcessName from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId;";
             List<node> nodes = jdbcTemplate.query(sql2, new nodeRowMapper());
             return nodes;
         } catch (IncorrectResultSizeDataAccessException e) {
