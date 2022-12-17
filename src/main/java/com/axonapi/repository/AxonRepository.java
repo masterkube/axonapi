@@ -47,7 +47,7 @@ public class AxonRepository{
     
     public List<edge> getallrelation(){
         try{
-            String sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where  ProcessName != SignalProcessName;";
+            String sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where  ProcessId != SignalProcessId;";
 
             List<edge> edgeResult = jdbcTemplate.query(sql1,new edgeRowMapper());
             return edgeResult;
