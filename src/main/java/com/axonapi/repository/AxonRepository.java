@@ -50,7 +50,7 @@ public class AxonRepository{
            l.setFrom(rs.getString("from"));
            l.setTo(rs.getString("to"));
            l.setLabel(rs.getString("label"));
-           l.setLattitude(rs.getString("latitude"));
+           l.setLatitude(rs.getString("latitude"));
            l.setLongitude(rs.getString("longitude"));
            return l;
         }
