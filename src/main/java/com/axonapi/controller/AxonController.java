@@ -34,7 +34,7 @@ public class AxonController {
     }
     
     @GetMapping("/getdsn")
-    public List<latlong> getdsn(){
+    public List<latlong> getlatlongdsn(){
         return repo.getalldsn();
     }
 
