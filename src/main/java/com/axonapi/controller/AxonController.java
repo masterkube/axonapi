@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.axonapi.Model.edge;
+import com.axonapi.Model.latlong;
 import com.axonapi.Model.node;
 import com.axonapi.repository.AxonRepository;
 
@@ -32,4 +33,9 @@ public class AxonController {
         return repo.getallrelation();
     }
     
+    @GetMapping("/getdsn")
+    public List<latlong> getdsn(){
+        return repo.getalldsn();
+    }
+
 }

@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.axonapi.Model.edge;
+import com.axonapi.Model.latlong;
 import com.axonapi.Model.node;
 
 @Repository
@@ -41,6 +42,20 @@ public class AxonRepository{
         }
     }
 
+    class latlongRowMapper implements RowMapper <latlong> {
+        @Override
+        public latlong mapRow(ResultSet rs, int rowNum) throws SQLException {
+           latlong n = new latlong();
+           n.setProcessID(rs.getString("ProcessID"));
+           n.setFrom(rs.getString("from"));
+           n.setTo(rs.getString("to"));
+           n.setLabel(rs.getString("label"));
+           n.setLattitude(rs.getInt("latitude"));
+           n.setLongitude(rs.getInt("longitude"));
+           return n;
+        }
+    }
+
     public String test(){
         return "Hello World";
     }
@@ -64,6 +79,16 @@ public class AxonRepository{
             List<node> nodes = jdbcTemplate.query(sql2, new nodeRowMapper());
             return nodes;
         } catch (IncorrectResultSizeDataAccessException e) {
+            return null;
+        }
+    }
+
+    public List<latlong> getalldsn(){
+        try{
+            String sql3 = "select pfs.ProcessID,SUBSTRING_INDEX(pfs.DataElementValue,',',1) as latitude, SUBSTRING_INDEX(pfs.DataElementValue,',',-1) as longitude, psn.ProcessId as 'from', psn.SignalProcessId as 'to', psn.SignalActionName as label from payloadfilestore pfs, payloadsignalnamestore psn where pfs.DataElementName in (select ElementName from elementsrepository where ElementType='latlong') and psn.ProcessId in (pfs.ProcessID);";
+            List<latlong> latlongdata = jdbcTemplate.query(sql3, new latlongRowMapper() );
+            return latlongdata;
+        }catch(Exception e){
             return null;
         }
     }
