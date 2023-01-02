@@ -45,14 +45,14 @@ public class AxonRepository{
     class latlongRowMapper implements RowMapper <latlong> {
         @Override
         public latlong mapRow(ResultSet rs, int rowNum) throws SQLException {
-           latlong n = new latlong();
-           n.setProcessID(rs.getString("ProcessID"));
-           n.setFrom(rs.getString("from"));
-           n.setTo(rs.getString("to"));
-           n.setLabel(rs.getString("label"));
-           n.setLattitude(rs.getInt("latitude"));
-           n.setLongitude(rs.getInt("longitude"));
-           return n;
+           latlong l = new latlong();
+           l.setProcessID(rs.getString("ProcessID"));
+           l.setFrom(rs.getString("from"));
+           l.setTo(rs.getString("to"));
+           l.setLabel(rs.getString("label"));
+           l.setLattitude(rs.getString("latitude"));
+           l.setLongitude(rs.getString("longitude"));
+           return l;
         }
     }
 

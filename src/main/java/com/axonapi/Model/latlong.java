@@ -1,22 +1,22 @@
 package com.axonapi.Model;
 
 public class latlong {
-    public int lattitude;
-    public int longitude;
+    public String lattitude;
+    public String longitude;
     public String ProcessID;
     public String from;
     public String to;
     public String label;
-    public int getLattitude() {
+    public String getLattitude() {
         return lattitude;
     }
-    public void setLattitude(int lattitude) {
+    public void setLattitude(String lattitude) {
         this.lattitude = lattitude;
     }
-    public int getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
-    public void setLongitude(int longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
     public String getProcessID() {
