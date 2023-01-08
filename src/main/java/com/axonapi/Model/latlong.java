@@ -4,9 +4,7 @@ public class latlong {
     public String latitude;
     public String longitude;
     public String ProcessID;
-    public String from;
-    public String to;
-    public String label;
+    public String AvatarName;
     public String getLatitude() {
         return latitude;
     }
@@ -25,22 +23,11 @@ public class latlong {
     public void setProcessID(String processID) {
         ProcessID = processID;
     }
-    public String getFrom() {
-        return from;
+    public String getAvatarName() {
+        return AvatarName;
     }
-    public void setFrom(String from) {
-        this.from = from;
+    public void setAvatarName(String avatarName) {
+        AvatarName = avatarName;
     }
-    public String getTo() {
-        return to;
-    }
-    public void setTo(String to) {
-        this.to = to;
-    }
-    public String getLabel() {
-        return label;
-    }
-    public void setLabel(String label) {
-        this.label = label;
-    }
+   
 }

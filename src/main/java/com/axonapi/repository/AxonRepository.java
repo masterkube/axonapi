@@ -10,6 +10,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.axonapi.Model.Category;
+import com.axonapi.Model.Shipment;
+import com.axonapi.Model.SubCategory;
 import com.axonapi.Model.edge;
 import com.axonapi.Model.latlong;
 import com.axonapi.Model.node;
@@ -47,12 +50,21 @@ public class AxonRepository{
         public latlong mapRow(ResultSet rs, int rowNum) throws SQLException {
            latlong l = new latlong();
            l.setProcessID(rs.getString("ProcessID"));
-           l.setFrom(rs.getString("from"));
-           l.setTo(rs.getString("to"));
-           l.setLabel(rs.getString("label"));
+           l.setAvatarName(rs.getString("AvatarName"));
            l.setLatitude(rs.getString("latitude"));
            l.setLongitude(rs.getString("longitude"));
            return l;
+        }
+    }
+
+    class shipmentRowMapper implements RowMapper <Shipment> {
+        @Override
+        public Shipment mapRow(ResultSet rs, int rowNum) throws SQLException {
+           Shipment s = new Shipment();
+           s.setProcessId(rs.getString("ProcessID"));
+           s.setAvatarName(rs.getString("AvatarName"));
+           s.setProcessName(rs.getString("ProcessName"));
+           return s;
         }
     }
 
@@ -85,9 +97,39 @@ public class AxonRepository{
 
     public List<latlong> getalldsn(){
         try{
-            String sql3 = "select pfs.ProcessID,SUBSTRING_INDEX(pfs.DataElementValue,',',1) as latitude, SUBSTRING_INDEX(pfs.DataElementValue,',',-1) as longitude, psn.ProcessId as 'from', psn.SignalProcessId as 'to', psn.SignalActionName as label from payloadfilestore pfs, payloadsignalnamestore psn where pfs.DataElementName in (select ElementName from elementsrepository where ElementType='latlong') and psn.ProcessId in (pfs.ProcessID);";
+            String sql3 = "select an.AvatarName,pfs.ProcessID,TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',1)) as latitude, TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',-1)) as longitude from payloadfilestore pfs, avatarnamestore an where DataElementName in (select ElementName from elementsrepository where ElementType='latlong') and an.ProcessID = pfs.ProcessID and an.AvatarName != pfs.ProcessID;";
             List<latlong> latlongdata = jdbcTemplate.query(sql3, new latlongRowMapper() );
             return latlongdata;
+        }catch(Exception e){
+            return null;
+        }
+    }
+
+    // public List<Category> getallcategory(){
+    //     try{
+    //         String sql3 = "select an.AvatarName,pfs.ProcessID,TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',1)) as latitude, TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',-1)) as longitude from payloadfilestore pfs, avatarnamestore an where DataElementName in (select ElementName from elementsrepository where ElementType='latlong') and an.ProcessID = pfs.ProcessID and an.AvatarName != pfs.ProcessID;";
+    //         List<Category> latlongdata = jdbcTemplate.query(sql3, new latlongRowMapper() );
+    //         return latlongdata;
+    //     }catch(Exception e){
+    //         return null;
+    //     }
+    // }
+
+    // public List<SubCategory> getallsubcategory(String category){
+    //     try{
+    //         String sql3 = "select an.AvatarName,pfs.ProcessID,TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',1)) as latitude, TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',-1)) as longitude from payloadfilestore pfs, avatarnamestore an where DataElementName in (select ElementName from elementsrepository where ElementType='latlong') and an.ProcessID = pfs.ProcessID and an.AvatarName != pfs.ProcessID;";
+    //         List<SubCategory> latlongdata = jdbcTemplate.query(sql3, new latlongRowMapper() );
+    //         return latlongdata;
+    //     }catch(Exception e){
+    //         return null;
+    //     }
+    // }
+
+    public List<Shipment> getallshipment(String name){
+        try{
+            String sql4 = "select ps.ProcessId, an.AvatarName, ps.ProcessName from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId having ps.ProcessName="+name+";";
+            List<Shipment> shipments = jdbcTemplate.query(sql4, new shipmentRowMapper() );
+            return shipments;
         }catch(Exception e){
             return null;
         }
