@@ -128,7 +128,7 @@ public class AxonRepository{
 
     public List<Shipment> getallshipment(String name){
         try{
-            String sql4 = "select ps.ProcessId, an.AvatarName, ps.ProcessName from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId having ps.ProcessName="+name+";";
+            String sql4 = "select ps.ProcessId, an.AvatarName, ps.ProcessName from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId having ps.ProcessName='"+name+"';";
             System.out.println(name+" "+sql4);
             List<Shipment> shipments = jdbcTemplate.query(sql4, new shipmentRowMapper() );
             return shipments;
