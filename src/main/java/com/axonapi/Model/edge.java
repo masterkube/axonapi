@@ -4,7 +4,7 @@ public class edge {
 
     public String from;
     public String to;
-    public String label;
+    public String signal;
 
     public String getFrom() {
         return this.from;
@@ -22,12 +22,12 @@ public class edge {
         this.to = to;
     }
 
-    public String getLabel() {
-        return this.label;
+    public String getSignal() {
+        return this.signal;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setSignal(String signal) {
+        this.signal = signal;
     }
    
 }

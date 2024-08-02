@@ -1,5 +1,6 @@
 package com.axonapi.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.io.Console;
 import java.sql.ResultSet;
@@ -30,7 +31,7 @@ public class AxonRepository{
            edge e = new edge();
            e.setFrom(rs.getString("from"));
            e.setTo(rs.getString("to"));
-           e.setLabel(rs.getString("label"));
+           e.setSignal(rs.getString("signal"));
            return e;
         }
     }
@@ -70,13 +71,26 @@ public class AxonRepository{
         return "Hello World";
     }
     
-    public List<edge> getallrelation(){
+    public List<edge> getallrelation(String nodeName, String filterNode){
         try{
-            String sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where  ProcessId != SignalProcessId;";
-
-            List<edge> edgeResult = jdbcTemplate.query(sql1,new edgeRowMapper());
+            String sql1 = "";
+            if(nodeName.equals("home") && filterNode.isEmpty()){
+                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where  ProcessId != SignalProcessId;";
+            }
+            else if(nodeName.equals("home") && filterNode != null && filterNode.length() > 0){
+                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where SignalProcessId=" + filterNode + " and ProcessId != SignalProcessId;";
+            }
+            else if(!nodeName.equals("home") && filterNode.isEmpty()){
+                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where ProcessId =" + nodeName + " and ProcessId != SignalProcessId;";
+            }
+            else{
+                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where ProcessId =" + nodeName + " and SignalProcessId=" + filterNode + " and ProcessId != SignalProcessId;";
+            }
+            List<edge> edgeResult = new ArrayList<edge>();
+            edgeResult = jdbcTemplate.query(sql1,new edgeRowMapper());
             return edgeResult;
-        } catch (IncorrectResultSizeDataAccessException e) {
+        } 
+        catch (IncorrectResultSizeDataAccessException e) {
             return null;
         }
     }
