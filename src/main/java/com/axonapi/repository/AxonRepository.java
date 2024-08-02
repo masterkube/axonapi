@@ -1,5 +1,6 @@
 package com.axonapi.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.io.Console;
 import java.sql.ResultSet;
@@ -30,7 +31,7 @@ public class AxonRepository{
            edge e = new edge();
            e.setFrom(rs.getString("from"));
            e.setTo(rs.getString("to"));
-           e.setLabel(rs.getString("label"));
+           e.setSignal(rs.getString("signal"));
            return e;
         }
     }
@@ -40,8 +41,6 @@ public class AxonRepository{
         public node mapRow(ResultSet rs, int rowNum) throws SQLException {
            node n = new node();
            n.setId(rs.getString("ProcessId"));
-           n.setLabel(rs.getString("AvatarName"));
-           n.setParentnode(rs.getString("ProcessName"));
            return n;
         }
     }
@@ -62,9 +61,8 @@ public class AxonRepository{
         @Override
         public Shipment mapRow(ResultSet rs, int rowNum) throws SQLException {
            Shipment s = new Shipment();
-           s.setProcessId(rs.getString("ProcessID"));
+           s.setProcessId(rs.getString("ProcessId"));
            s.setAvatarName(rs.getString("AvatarName"));
-           s.setProcessName(rs.getString("ProcessName"));
            return s;
         }
     }
@@ -73,22 +71,33 @@ public class AxonRepository{
         return "Hello World";
     }
     
-    public List<edge> getallrelation(){
+    public List<edge> getallrelation(String nodeName, String filterNode){
         try{
-            String sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where  ProcessId != SignalProcessId;";
-
-            List<edge> edgeResult = jdbcTemplate.query(sql1,new edgeRowMapper());
+            String sql1 = "";
+            if(nodeName.equals("home") && filterNode.isEmpty()){
+                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where  ProcessId != SignalProcessId;";
+            }
+            else if(nodeName.equals("home") && filterNode != null && filterNode.length() > 0){
+                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where SignalProcessId=" + filterNode + " and ProcessId != SignalProcessId;";
+            }
+            else if(!nodeName.equals("home") && filterNode.isEmpty()){
+                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where ProcessId =" + nodeName + " and ProcessId != SignalProcessId;";
+            }
+            else{
+                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where ProcessId =" + nodeName + " and SignalProcessId=" + filterNode + " and ProcessId != SignalProcessId;";
+            }
+            List<edge> edgeResult = new ArrayList<edge>();
+            edgeResult = jdbcTemplate.query(sql1,new edgeRowMapper());
             return edgeResult;
-        } catch (IncorrectResultSizeDataAccessException e) {
+        } 
+        catch (IncorrectResultSizeDataAccessException e) {
             return null;
         }
     }
 
     public List<node> getnodes(){
         try{
-            //String sql2 = "select ps.ProcessId as 'ProcessId', GROUP_CONCAT(distinct it.ActionName) as 'OutBounds', GROUP_CONCAT(distinct ia.ActionName) as 'InBounds' from processstore ps, interactionspacetell it, interactionspaceask ia where it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId";
-            //with avatar name for label
-            String sql2 = "select ps.ProcessId, an.AvatarName, ps.ProcessName from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId;";
+            String sql2 = "select ps.ProcessId from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId;";
             List<node> nodes = jdbcTemplate.query(sql2, new nodeRowMapper());
             return nodes;
         } catch (IncorrectResultSizeDataAccessException e) {
@@ -98,7 +107,7 @@ public class AxonRepository{
 
     public List<latlong> getalldsn(){
         try{
-            String sql3 = "select an.AvatarName,pfs.ProcessID,TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',1)) as latitude, TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',-1)) as longitude from payloadfilestore pfs, avatarnamestore an where DataElementName in (select ElementName from elementsrepository where ElementType='latlong') and an.ProcessID = pfs.ProcessID and an.AvatarName != pfs.ProcessID;";
+            String sql3 = "select an.AvatarName as 'AvatarName', pfs.ProcessID as 'ProcessID', TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',1)) as latitude, TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',-1)) as longitude from payloadfilestore pfs, avatarnamestore an where DataElementName in (select ElementName from elementsrepository where ElementType='latlong') and an.ProcessID = pfs.ProcessID and an.AvatarName != pfs.ProcessID;";
             List<latlong> latlongdata = jdbcTemplate.query(sql3, new latlongRowMapper() );
             return latlongdata;
         }catch(Exception e){
@@ -106,29 +115,9 @@ public class AxonRepository{
         }
     }
 
-    // public List<Category> getallcategory(){
-    //     try{
-    //         String sql3 = "select an.AvatarName,pfs.ProcessID,TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',1)) as latitude, TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',-1)) as longitude from payloadfilestore pfs, avatarnamestore an where DataElementName in (select ElementName from elementsrepository where ElementType='latlong') and an.ProcessID = pfs.ProcessID and an.AvatarName != pfs.ProcessID;";
-    //         List<Category> latlongdata = jdbcTemplate.query(sql3, new latlongRowMapper() );
-    //         return latlongdata;
-    //     }catch(Exception e){
-    //         return null;
-    //     }
-    // }
-
-    // public List<SubCategory> getallsubcategory(String category){
-    //     try{
-    //         String sql3 = "select an.AvatarName,pfs.ProcessID,TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',1)) as latitude, TRIM(SUBSTRING_INDEX(pfs.DataElementValue,',',-1)) as longitude from payloadfilestore pfs, avatarnamestore an where DataElementName in (select ElementName from elementsrepository where ElementType='latlong') and an.ProcessID = pfs.ProcessID and an.AvatarName != pfs.ProcessID;";
-    //         List<SubCategory> latlongdata = jdbcTemplate.query(sql3, new latlongRowMapper() );
-    //         return latlongdata;
-    //     }catch(Exception e){
-    //         return null;
-    //     }
-    // }
-
     public List<Shipment> getallshipment(String name){
         try{
-            String sql4 = "select ps.ProcessId, an.AvatarName, ps.ProcessName from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId having ps.ProcessName='"+name+"';";
+            String sql4 = "select ps.ProcessId as 'ProcessId', an.AvatarName as 'AvatarName' from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId having ps.ProcessName='"+name+"';";
             System.out.println(name+" "+sql4);
             List<Shipment> shipments = jdbcTemplate.query(sql4, new shipmentRowMapper() );
             return shipments;

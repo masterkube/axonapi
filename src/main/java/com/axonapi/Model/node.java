@@ -20,7 +20,7 @@ public class node {
     public void setLabel(String label){
         this.label = label;
     } 
-    
+
     public String getId(){
         return id;
     }
