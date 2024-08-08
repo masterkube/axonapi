@@ -41,6 +41,15 @@ public class AxonController {
         }
         return edges;
     }
+
+   @GetMapping("/relation")
+    public List<edge> getRelation() {
+        List<edge> edges = repo.getallrelation("home", "");
+        if(edges.size() == 0){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No relation found for the given node");
+        }
+        return edges;
+    } 
     
     @GetMapping("/getdsn")
     public List<latlong> getlatlongdsn(){
