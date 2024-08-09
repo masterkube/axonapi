@@ -1,3 +1,6 @@
+localhost:8000/axonapi/test
+
+
 select distinct  ProcessId  from processstore;
 
 select distinct ProcessName, ActionName from  interactionspacetell where ProcessName = "State" and IsNameInternal = 0;
