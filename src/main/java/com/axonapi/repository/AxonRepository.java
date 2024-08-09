@@ -31,7 +31,7 @@ public class AxonRepository{
            edge e = new edge();
            e.setFrom(rs.getString("from"));
            e.setTo(rs.getString("to"));
-           e.setSignal(rs.getString("signal"));
+           e.setSignal(rs.getString("label"));
            return e;
         }
     }
@@ -75,16 +75,16 @@ public class AxonRepository{
         try{
             String sql1 = "";
             if(nodeName.equals("home") && filterNode.isEmpty()){
-                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'signal' from payloadsignalnamestore where  ProcessId != SignalProcessId;";
+                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where  ProcessId != SignalProcessId;";
             }
             else if(nodeName.equals("home") && filterNode != null && filterNode.length() > 0){
-                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'signal' from payloadsignalnamestore where SignalProcessId like '%" + filterNode + "%' and ProcessId != SignalProcessId;";
+                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where SignalProcessId like '%" + filterNode + "%' and ProcessId != SignalProcessId;";
             }
             else if(!nodeName.equals("home") && filterNode.isEmpty()){
-                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'signal' from payloadsignalnamestore where ProcessId ='" + nodeName + "' and ProcessId != SignalProcessId;";
+                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where ProcessId ='" + nodeName + "' and ProcessId != SignalProcessId;";
             }
             else{
-                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'signal' from payloadsignalnamestore where ProcessId ='" + nodeName + "' and SignalProcessId like '%" + filterNode + "%' and ProcessId != SignalProcessId;";
+                sql1 = "select distinct ProcessId as 'from', SignalProcessId as 'to' ,SignalActionName as 'label' from payloadsignalnamestore where ProcessId ='" + nodeName + "' and SignalProcessId like '%" + filterNode + "%' and ProcessId != SignalProcessId;";
             }
             List<edge> edgeResult = new ArrayList<edge>();
             edgeResult = jdbcTemplate.query(sql1,new edgeRowMapper());
