@@ -31,7 +31,7 @@ public class AxonRepository{
            edge e = new edge();
            e.setFrom(rs.getString("from"));
            e.setTo(rs.getString("to"));
-           e.setSignal(rs.getString("label"));
+           e.setLabel(rs.getString("label"));
            return e;
         }
     }
