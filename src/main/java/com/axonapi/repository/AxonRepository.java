@@ -41,6 +41,8 @@ public class AxonRepository{
         public node mapRow(ResultSet rs, int rowNum) throws SQLException {
            node n = new node();
            n.setId(rs.getString("ProcessId"));
+           n.setLabel(rs.getString("AvatarName"));
+           n.setParentnode(rs.getString("ProcessName"));
            return n;
         }
     }
@@ -63,6 +65,7 @@ public class AxonRepository{
            Shipment s = new Shipment();
            s.setProcessId(rs.getString("ProcessId"));
            s.setAvatarName(rs.getString("AvatarName"));
+           s.setProcessName(rs.getString("ProcessName"));
            return s;
         }
     }
@@ -97,7 +100,7 @@ public class AxonRepository{
 
     public List<node> getnodes(){
         try{
-            String sql2 = "select ps.ProcessId from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId;";
+            String sql2 = "select ps.ProcessId, an.AvatarName, ps.ProcessName from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId;";
             List<node> nodes = jdbcTemplate.query(sql2, new nodeRowMapper());
             return nodes;
         } catch (IncorrectResultSizeDataAccessException e) {
@@ -117,8 +120,7 @@ public class AxonRepository{
 
     public List<Shipment> getallshipment(String name){
         try{
-            String sql4 = "select ps.ProcessId as 'ProcessId', an.AvatarName as 'AvatarName' from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId having ps.ProcessName='"+name+"';";
-            System.out.println(name+" "+sql4);
+            String sql4 = "select ps.ProcessId, an.AvatarName, ps.ProcessName from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId having ps.ProcessName='"+name+"';";
             List<Shipment> shipments = jdbcTemplate.query(sql4, new shipmentRowMapper() );
             return shipments;
         }catch(Exception e){
