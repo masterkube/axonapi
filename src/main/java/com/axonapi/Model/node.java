@@ -6,7 +6,7 @@ public class node {
     public String parentNode;
 
     public String getParentnode() {
-        return this.parentNode;
+        return parentNode;
     }
 
     public void setParentnode(String parentNode) {
