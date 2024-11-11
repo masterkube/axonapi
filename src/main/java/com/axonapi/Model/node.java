@@ -3,14 +3,14 @@ package com.axonapi.Model;
 public class node {
     public String id;
     public String label;
-    public String parentNode;
+    public String parentnode;
 
     public String getParentnode() {
-        return parentNode;
+        return parentnode;
     }
 
-    public void setParentnode(String parentNode) {
-        this.parentNode = parentNode;
+    public void setParentnode(String parentnode) {
+        this.parentnode = parentnode;
     }
 
     public void setId(String id){
