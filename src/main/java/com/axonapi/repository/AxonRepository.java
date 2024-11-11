@@ -42,7 +42,7 @@ public class AxonRepository{
            node n = new node();
            n.setId(rs.getString("ProcessId"));
            n.setLabel(rs.getString("AvatarName"));
-           n.setParentnode(rs.getString("ProcessName"));
+           n.setParentnode(rs.getString("parentnode"));
            return n;
         }
     }
