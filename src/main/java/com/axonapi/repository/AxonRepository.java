@@ -42,7 +42,7 @@ public class AxonRepository{
            node n = new node();
            n.setId(rs.getString("ProcessId"));
            n.setLabel(rs.getString("AvatarName"));
-           n.setParentnode(rs.getString("parentnode"));
+           n.setParentnode(rs.getString("parentNode"));
            return n;
         }
     }
@@ -100,7 +100,7 @@ public class AxonRepository{
 
     public List<node> getnodes(){
         try{
-            String sql2 = "select ps.ProcessId, an.AvatarName, ps.ProcessName as 'parentnode' from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId;";
+            String sql2 = "select ps.ProcessId, an.AvatarName, ps.ProcessName as 'parentNode' from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId;";
             List<node> nodes = jdbcTemplate.query(sql2, new nodeRowMapper());
             return nodes;
         } catch (IncorrectResultSizeDataAccessException e) {
