@@ -5,11 +5,11 @@ public class node {
     public String label;
     public String parentnode;
 
-    public String getparentnode() {
+    public String getParentnode() {
         return parentnode;
     }
 
-    public void setparentnode(String parentnode) {
+    public void setParentnode(String parentnode) {
         this.parentnode = parentnode;
     }
 
