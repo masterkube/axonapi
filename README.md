@@ -1,5 +1,5 @@
 localhost:8000/axonapi/test
-
+http://localhost:8000/axonapi/getnodes
 
 select distinct  ProcessId  from processstore;
 
