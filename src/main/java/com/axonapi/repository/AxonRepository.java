@@ -101,7 +101,7 @@ public class AxonRepository{
     public List<node> getnodes(){
         try{
             //String sql2 = "select ps.ProcessId, an.AvatarName, ps.ProcessName as 'parentnode' from processstore ps, interactionspacetell it, interactionspaceask ia, avatarnamestore an where an.ProcessId = ps.ProcessId and it.IsNameInternal = 0 and ia.IsNameInternal = 0 GROUP by ps.ProcessId;";
-            String sql2 = "SELECT ps.ProcessId, an.AvatarName, ps.ProcessName AS parentnode FROM processstore ps INNER JOIN avatarnamestore an ON an.ProcessId = ps.ProcessId INNER JOIN interactionspacetell it ON it.ProcessId = ps.ProcessId INNER JOIN interactionspaceask ia ON ia.ProcessId = ps.ProcessId WHERE it.IsNameInternal = 0 AND ia.IsNameInternal = 0 GROUP BY ps.ProcessId, an.AvatarName, ps.ProcessName;";
+            String sql2 = "SELECT  ps.ProcessId, an.AvatarName, ps.ProcessName AS parentnode FROM  processstore ps JOIN  avatarnamestore an ON an.ProcessId = ps.ProcessId GROUP by ps.ProcessId;";
             List<node> nodes = jdbcTemplate.query(sql2, new nodeRowMapper());
             return nodes;
         } catch (IncorrectResultSizeDataAccessException e) {
